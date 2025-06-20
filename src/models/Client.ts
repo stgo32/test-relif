@@ -5,17 +5,17 @@ import { Debt } from './Debt';
 @Entity()
 export class Client {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  rut: string;
+  rut!: string;
 
   @OneToMany(() => Message, (message) => message.client, { cascade: true })
-  messages: Message[];
+  messages!: Message[];
 
   @OneToMany(() => Debt, (debt) => debt.client, { cascade: true })
-  debts: Debt[];
+  debts!: Debt[];
 }

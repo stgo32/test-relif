@@ -18,6 +18,6 @@ AppDataSource.initialize().then(() => {
 
   const PORT = 3000;
   app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Server runnig on port http://localhost:${PORT}`);
   });
 });

@@ -4,17 +4,17 @@ import { Client } from './Client';
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  text: string;
+  text!: string;
 
   @Column()
-  role: 'client' | 'agent';
+  role!: 'client' | 'agent';
 
   @Column()
-  sentAt: Date;
+  sentAt!: Date;
 
   @ManyToOne(() => Client, (client) => client.messages)
-  client: Client;
+  client!: Client;
 }

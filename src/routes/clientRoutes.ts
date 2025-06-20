@@ -1,6 +1,7 @@
 import Router from 'koa-router';
-import { AppDataSource } from '../db/data-source';
+import { AppDataSource } from '../db/config';
 import { Client } from '../models/Client';
+import { ClientPayload } from '../utils/types';
 import { MoreThan, LessThan } from 'typeorm';
 
 const router = new Router();
@@ -14,7 +15,7 @@ router.get('/clients/:id', async (ctx) => {
   const repo = AppDataSource.getRepository(Client);
   const client = await repo.findOne({
     where: { id: Number(ctx.params.id) },
-    relations: ['messages', 'deudas'],
+    relations: ['messages', 'debts'],
   });
   if (!client) {
     ctx.status = 404;
@@ -38,19 +39,37 @@ router.get('/clients-to-do-follow-up', async (ctx) => {
 });
 
 router.post('/client', async (ctx) => {
-  const { name, rut, messages, deudas } = ctx.request.body;
-  const repo = AppDataSource.getRepository(Client);
+  try {
+    const body = ctx.request.body as ClientPayload;
+    const { name, rut, messages, debts } = body;
 
-  const newClient = repo.create({
-    name,
-    rut,
-    messages,
-    deudas,
-  });
+    const repo = AppDataSource.getRepository(Client);
 
-  await repo.save(newClient);
-  ctx.status = 201;
-  ctx.body = newClient;
+    const newClient = repo.create({
+      name,
+      rut,
+      messages: messages.map((msg) => ({
+        ...msg,
+        sentAt: new Date(msg.sentAt),
+      })),
+      debts: debts.map((debt) => ({
+        ...debt,
+        dueDate: new Date(debt.dueDate),
+      })),
+    });
+
+    await repo.save(newClient);
+
+    ctx.status = 201;
+    ctx.body = newClient;
+  } catch (error) {
+    console.error('❌ Error al guardar el cliente:', error);
+    ctx.status = 500;
+    ctx.body = {
+      error: 'Ocurrió un error al guardar el cliente. Verifica los datos y vuelve a intentar.',
+    };
+  }
 });
+
 
 export default router;
