@@ -1,16 +1,18 @@
 import Koa from 'koa';
-import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import { AppDataSource } from './db/config';
-import clientRoutes from './routes/clientRoutes';
+import router from './routes/routes';
 
 const app = new Koa();
-const router = new Router();
 
 AppDataSource.initialize().then(() => {
   console.log('📦 Base de datos conectada');
 
-  router.use(clientRoutes.routes());
+  app.use(async (ctx, next) => {
+    console.log(`🛰️  ${ctx.method} ${ctx.url}`);
+    await next();
+  })
+
   app
     .use(bodyParser())
     .use(router.routes())
@@ -18,6 +20,6 @@ AppDataSource.initialize().then(() => {
 
   const PORT = 3000;
   app.listen(PORT, () => {
-    console.log(`🚀 Server runnig on port http://localhost:${PORT}`);
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
 });

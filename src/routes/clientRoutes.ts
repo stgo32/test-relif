@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import { AppDataSource } from '../db/config';
 import { Client } from '../models/Client';
 import { ClientPayload } from '../utils/types';
-import { MoreThan, LessThan } from 'typeorm';
+import { Message } from '../models/Message';
 
 const router = new Router();
 
@@ -70,6 +70,7 @@ router.post('/client', async (ctx) => {
     };
   }
 });
+
 
 
 export default router;
