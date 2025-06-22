@@ -53,10 +53,8 @@ router.get('/clients/:id/generateMessage', async (ctx) => {
 router.post('/clients/:id/message', async (ctx) => {
   try {
     const clientId = Number(ctx.params.id);
-    const { text, sentAt, role } = ctx.request.body as {
+    const { text } = ctx.request.body as {
       text: string;
-      sentAt: string;
-      role: 'client' | 'agent';
     };
 
     const clientRepo = AppDataSource.getRepository(Client);
@@ -72,8 +70,8 @@ router.post('/clients/:id/message', async (ctx) => {
 
     const message = messageRepo.create({
       text,
-      role,
-      sentAt: new Date(sentAt),
+      role: 'client',
+      sentAt: new Date(),
       client,
     });
 
@@ -87,7 +85,6 @@ router.post('/clients/:id/message', async (ctx) => {
     ctx.body = { error: 'Error al guardar el mensaje para el cliente' };
   }
 });
-
 
 
 export default router;
