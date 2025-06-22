@@ -27,16 +27,19 @@ router.get('/clients/:id', async (ctx) => {
 
 router.get('/clients-to-do-follow-up', async (ctx) => {
   const repo = AppDataSource.getRepository(Client);
+
   const clients = await repo
     .createQueryBuilder('client')
-    .leftJoinAndSelect('client.messages', 'message')
     .where(
       `(SELECT MAX("sentAt") FROM "message" WHERE "message"."clientId" = client.id) < NOW() - INTERVAL '7 days'`
     )
-    .getMany();
+    .select(['client.id', 'client.name', 'client.rut']) 
+    .getMany(); 
 
   ctx.body = clients;
 });
+
+
 
 router.post('/client', async (ctx) => {
   try {
