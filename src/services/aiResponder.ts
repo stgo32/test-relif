@@ -5,18 +5,12 @@ import {
   ChatCompletionUserMessageParam,
 } from 'openai/resources/chat';
 import { Message } from '../models/Message';
+import { availableCars } from '../utils/carsInStock';
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'api-key',
 });
-
-const availableCars = [
-  { model: 'Ferrari 488 GTB', price: '$220.000.000', type: 'coupé', year: 2020 },
-  { model: 'Lamborghini Huracán EVO', price: '$250.000.000', type: 'coupé', year: 2021 },
-  { model: 'Porsche 911 Turbo S', price: '$190.000.000', type: 'coupé', year: 2022 },
-  { model: 'Ferrari Roma', price: '$230.000.000', type: 'coupé', year: 2023 },
-  { model: 'Lamborghini Urus', price: '$210.000.000', type: 'SUV', year: 2022 },
-];
 
 function mapRole(role: string): 'user' | 'assistant' {
   return role === 'client' ? 'user' : 'assistant';
@@ -36,13 +30,13 @@ export function buildChatHistory(
   const systemPrompt: ChatCompletionSystemMessageParam = {
     role: 'system',
     content: `You are Santiago, a professional car sales advisor in Chile.
-You are assisting a client in buying a new car. You only sell new Ferrari, Lamborghini, and Porsche models.
-The cars are located in Vitacura and Lo Barnechea branches.
+            You are assisting a client in buying a new car. You only sell new Ferrari, Lamborghini, and Porsche models.
+            The cars are located in Vitacura and Lo Barnechea branches.
 
-Your job is to guide the client with empathy and professionalism.
+            Your job is to guide the client with empathy and professionalism.
 
-Available cars:
-${carsList}`,
+            Available cars:
+            ${carsList}`,
   };
 
   const chatMessages = messages.map((msg) => ({

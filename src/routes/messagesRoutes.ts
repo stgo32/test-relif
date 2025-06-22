@@ -5,6 +5,7 @@ import { Message } from '../models/Message';
 import { shouldRespondToClient, sortMessagesChronologically } from '../utils/messageUtils';
 import { buildChatHistory, generateAIResponse } from '../services/aiResponder';
 
+
 const router = new Router();
 
 router.get('/clients/:id/generateMessage', async (ctx) => {
@@ -64,7 +65,7 @@ router.post('/clients/:id/message', async (ctx) => {
 
     if (!client) {
       ctx.status = 404;
-      ctx.body = { error: 'Cliente no encontrado' };
+      ctx.body = { error: 'Client not found' };
       return;
     }
 
@@ -80,9 +81,9 @@ router.post('/clients/:id/message', async (ctx) => {
     ctx.status = 201;
     ctx.body = message;
   } catch (error) {
-    console.error('❌ Error al guardar el mensaje:', error);
+    console.error('❌ Error saving message', error);
     ctx.status = 500;
-    ctx.body = { error: 'Error al guardar el mensaje para el cliente' };
+    ctx.body = { error: 'Error while saving message' };
   }
 });
 

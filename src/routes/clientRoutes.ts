@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import { AppDataSource } from '../db/config';
 import { Client } from '../models/Client';
 import { ClientPayload } from '../utils/types';
-import { Message } from '../models/Message';
+
 
 const router = new Router();
 
@@ -19,7 +19,7 @@ router.get('/clients/:id', async (ctx) => {
   });
   if (!client) {
     ctx.status = 404;
-    ctx.body = { error: 'Cliente no encontrado' };
+    ctx.body = { error: 'Client not found' };
   } else {
     ctx.body = client;
   }
@@ -66,14 +66,13 @@ router.post('/client', async (ctx) => {
     ctx.status = 201;
     ctx.body = newClient;
   } catch (error) {
-    console.error('❌ Error al guardar el cliente:', error);
+    console.error('❌ Error saving client', error);
     ctx.status = 500;
     ctx.body = {
-      error: 'Ocurrió un error al guardar el cliente. Verifica los datos y vuelve a intentar.',
+      error: 'Error saving client. Please verify the data and try again.',
     };
   }
 });
-
 
 
 export default router;
